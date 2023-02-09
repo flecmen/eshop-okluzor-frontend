@@ -1,9 +1,11 @@
 <template>
   <q-toolbar>
     <q-btn flat round dense icon="menu" class="q-mr-sm" />
-    <q-avatar style="width: fit-content" square>
-      <img src="src/assets/Logo.png" />
-    </q-avatar>
+    <q-item clickable :to="{ name: 'home' }">
+      <q-avatar style="width: fit-content" square>
+        <img src="src/assets/Logo_eshop.png" />
+      </q-avatar>
+    </q-item>
     <q-space />
     <q-btn-dropdown stretch flat label="Admin">
       <q-list>

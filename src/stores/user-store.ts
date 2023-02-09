@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import { AxiosResponse } from 'axios';
 import { ref, computed } from 'vue';
 import { User } from 'src/types/dbTypes';
 import config from '../config'
