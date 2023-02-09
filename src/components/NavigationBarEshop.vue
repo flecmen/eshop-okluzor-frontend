@@ -44,6 +44,6 @@ const router = useRouter();
 
 function logout() {
   userStore.logout();
-  router.push({ name: 'home' });
+  router.push({ name: 'login' });
 }
 </script>
