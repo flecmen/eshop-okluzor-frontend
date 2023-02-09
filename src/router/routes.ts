@@ -7,23 +7,24 @@ import BlankLayout from 'layouts/BlankLayout.vue'
 const routes: RouteRecordRaw[] = [
   {
     path: '/login',
-    name: 'login',
     component: BlankLayout,
-    children: [{ path: '', name: 'login', component: () => import('pages/loginPage.vue') }]
+    children: [
+      {
+        path: '',
+        name: 'login',
+        component: () => import('pages/loginPage.vue'),
+      }
+    ]
   },
   {
     path: '',
     component: MainLayout,
-    children: [{ path: '', name: 'home', component: () => import('pages/IndexPage.vue') }]
-  },
-  {
-    path: '/auth',
-    name: 'auth',
-    components: {
-      default: () => import('../AuthSection.vue'),
-      contentView: () => import('pages/IndexPage.vue')
-    },
     children: [
+      {
+        path: '',
+        name: 'home',
+        component: () => import('pages/IndexPage.vue')
+      },
       {
         path: 'admin',
         component: MainLayout,
@@ -39,8 +40,7 @@ const routes: RouteRecordRaw[] = [
             component: () => import('pages/admin/manageCustomers.vue')
           }
         ],
-      },
-    ]
+      },]
   },
 
   // Always leave this as last one,
