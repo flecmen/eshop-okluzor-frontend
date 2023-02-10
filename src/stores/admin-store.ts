@@ -44,6 +44,7 @@ export const useAdminStore = defineStore('adminStore', () => {
       return response.data !== undefined
     } catch (err) {
       userStore.error = 'Chyba při updatování zákazníka'
+      return false
     }
   }
 
