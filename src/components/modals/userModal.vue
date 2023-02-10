@@ -1,8 +1,14 @@
 <template>
-  <q-dialog v-model="$props.show">
-    <q-card>
-      <q-card-section class="row items-center">
-        <userForm class="bg-pink-5 align-center"></userForm>
+  <q-dialog v-model="$props.show" class="flex">
+    <q-card class="my-card">
+      <q-card-section class="row justify-center">
+        <userForm
+          type="update"
+          :userProp="userProp"
+          class="col-11"
+          ref="form"
+          @expose-form-data="send"
+        />
       </q-card-section>
 
       <q-card-actions align="right">
@@ -12,7 +18,15 @@
           color="primary"
           @click="emit('close-modal')"
         />
-        <q-btn flat label="Potvrdit" color="primary" @click="send()" />
+        <q-btn
+          flat
+          label="Potvrdit"
+          color="primary"
+          :loading="userStore.isProcessing"
+          @click="buttonFunction()"
+        >
+          <template v-slot:loading> <q-spinner-facebook /> </template>
+        </q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -21,9 +35,9 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { User } from '../../types/dbTypes';
-import blankObjects from '../../types/blankObjects';
-import UserForm from '../forms/UserForm.vue';
-
+import userForm from '../forms/userForm.vue';
+import { useUserStore } from 'src/stores/user-store';
+import { useAdminStore } from 'src/stores/admin-store';
 export interface Props {
   userProp?: User;
   show: boolean;
@@ -33,21 +47,31 @@ const props = withDefaults(defineProps<Props>(), {
   show: false,
 });
 
-let user = reactive({} as User);
-
-if (props.userProp === undefined) {
-  user = blankObjects.blankUser;
-} else {
-  user = reactive(props.userProp);
-}
-
+const userStore = useUserStore();
+const adminStore = useAdminStore();
 const emit = defineEmits<{
   (event: 'close-modal'): void;
 }>();
+const form = ref<InstanceType<typeof userForm> | null>(null);
 
-async function send() {
-  emit('close-modal');
-  return;
+const buttonFunction = () => {
+  form.value?.exposeFormData();
+};
+
+async function send(user: User) {
+  userStore.isProcessing = true;
+  const isOk = await adminStore.editUser(user);
+  userStore.isProcessing = false;
+  if (isOk) {
+    emit('close-modal');
+  } else {
+    userStore.error = 'chyba při ukládání zákazníka';
+  }
 }
-//const user = ref(props.userProp);
 </script>
+
+<style lang="sass" scoped>
+.my-card
+  width: 100%
+  max-width: 400px
+</style>

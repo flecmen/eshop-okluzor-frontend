@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import UserForm from 'src/components/forms/UserForm.vue';
+import UserForm from 'src/components/forms/userForm.vue.js';
 import { useUserStore } from 'src/stores/user-store';
 import { User } from 'src/types/dbTypes';
 const userStore = useUserStore();

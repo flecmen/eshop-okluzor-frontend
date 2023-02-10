@@ -1,11 +1,11 @@
 <template>
   <userModal
-    :show="showUserModal"
-    :user-prop="userModalData"
+    :show="isUserModalVisible"
+    :user-prop="userModalData.value"
     @close-modal="revertUserModal"
   ></userModal>
   <div class="q-pa-md">
-    <error-banner></error-banner>
+    <error-banner />
     <successBanner />
 
     <q-table
@@ -33,7 +33,7 @@
             round
             color="grey"
             icon="edit"
-            @click="revertUserModal(props.row.id)"
+            @click="showUserModal(props.row.id)"
           ></q-btn>
         </q-td>
       </template>
@@ -140,11 +140,17 @@ const rows = ref<typeof adminStore.users>([] as typeof adminStore.users);
 onMounted(async () => {
   await adminStore.loadUsers();
   rows.value = ref(adminStore.users).value;
+  console.log(rows.value);
 });
 
-const showUserModal = ref(false);
+const isUserModalVisible = ref(false);
+const revertUserModal = () => {
+  isUserModalVisible.value = !isUserModalVisible.value;
+};
+
 const userModalData = reactive({} as User);
-const revertUserModal = (id: number) => {
-  showUserModal.value = !showUserModal.value;
+const showUserModal = (userId: number) => {
+  userModalData.value = adminStore.getUserById(userId);
+  revertUserModal();
 };
 </script>

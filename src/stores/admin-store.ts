@@ -27,14 +27,31 @@ export const useAdminStore = defineStore('adminStore', () => {
       userStore.isProcessing = true;
       const response = await axios.get(config.backendUrl + '/user');
       users.value = response.data;
+      userStore.isProcessing = false;
     } catch (err) {
       userStore.error = 'něco se stalo ' + err;
+    }
+  }
+
+  function getUserById(userId: number): User | undefined {
+    return users.value.find(user => user.id === userId);
+  }
+
+  async function editUser(user: User): Promise<boolean> {
+    try {
+      const response = await axios.put(config.backendUrl + '/user/' + user.id, user)
+      users.value[users.value.findIndex(u => u.id === user.id)] = user
+      return response.data !== undefined
+    } catch (err) {
+      userStore.error = 'Chyba při updatování zákazníka'
     }
   }
 
   return {
     createUser,
     loadUsers,
+    getUserById,
     users,
+    editUser,
   };
 });
