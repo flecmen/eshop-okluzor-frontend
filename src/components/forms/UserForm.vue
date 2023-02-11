@@ -1,7 +1,5 @@
 <template>
-  <q-form class="" ref="userForm">
-    <errorBanner />
-    <successBanner />
+  <q-form ref="userForm">
     <q-input
       v-model="formUser.nazev_firmy"
       label="firma"
@@ -36,18 +34,18 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 import { User, Address } from '../../types/dbTypes';
+import { useUserStore } from 'src/stores/user-store';
 import blankObjects from '../../types/blankObjects';
 import config from 'src/config';
-import errorBanner from '../banners/errorBanner.vue';
-import successBanner from '../banners/successBanner.vue';
 
 export interface Props {
   userProp?: User;
-  type: string;
   sendData?: boolean;
 }
+
+const userStore = useUserStore();
 
 const props = withDefaults(defineProps<Props>(), {
   sendData: false,
@@ -57,7 +55,6 @@ let formUser = reactive({} as User);
 formUser.address = reactive({} as Address);
 
 onMounted(() => {
-  console.log('lifetimeHOOK userform');
   if (props.userProp === undefined) {
     formUser = blankObjects.blankUser;
   } else {
@@ -81,8 +78,13 @@ const emit = defineEmits<{
   (event: 'expose-form-data', user: User): void;
 }>();
 
-function exposeFormData() {
-  emit('expose-form-data', formUser);
+const userForm = ref(null);
+
+async function exposeFormData() {
+  if (await userForm.value.validate()) {
+    emit('expose-form-data', formUser);
+    userStore.error = null;
+  } else userStore.error = 'Něco ve formuláři chybí!';
 }
 
 defineExpose({

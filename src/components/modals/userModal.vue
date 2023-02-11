@@ -3,7 +3,6 @@
     <q-card class="my-card">
       <q-card-section class="row justify-center">
         <userForm
-          type="update"
           :userProp="userProp"
           class="col-11"
           ref="form"
@@ -14,7 +13,7 @@
       <q-card-actions align="right">
         <q-btn
           flat
-          label="Cancel"
+          label="Zrušit"
           color="primary"
           @click="emit('close-modal')"
         />
@@ -33,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 import { User } from '../../types/dbTypes';
 import userForm from '../forms/userForm.vue';
 import { useUserStore } from 'src/stores/user-store';
@@ -54,8 +53,8 @@ const emit = defineEmits<{
 }>();
 const form = ref<InstanceType<typeof userForm> | null>(null);
 
-const buttonFunction = () => {
-  form.value?.exposeFormData();
+const buttonFunction = async () => {
+  await form.value?.exposeFormData();
 };
 
 async function send(user: User) {

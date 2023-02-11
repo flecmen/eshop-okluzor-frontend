@@ -39,13 +39,28 @@ export const useAdminStore = defineStore('adminStore', () => {
 
   async function editUser(user: User): Promise<boolean> {
     try {
-      const response = await axios.put(config.backendUrl + '/user/' + user.id, user)
-      users.value[users.value.findIndex(u => u.id === user.id)] = user
-      return response.data !== undefined
+      //edit usera podle id
+      if (user.id !== undefined) {
+        const response = await axios.put(config.backendUrl + '/user/' + user.id, user)
+        users.value[users.value.findIndex(u => u.id === user.id)] = user
+        return response.data !== undefined
+
+        //Tvorba nového usera
+      } else {
+        const response = await axios.put(config.backendUrl + '/user', user)
+        users.value.push(user)
+        return response.data !== undefined
+      }
     } catch (err) {
       userStore.error = 'Chyba při updatování zákazníka'
       return false
     }
+  }
+
+  async function deleteUser(userId: number) {
+    await axios.delete(config.backendUrl + '/user/' + userId)
+    users.value.splice(users.value.findIndex(u => u.id === userId), 1)
+    return
   }
 
   return {
@@ -54,5 +69,6 @@ export const useAdminStore = defineStore('adminStore', () => {
     getUserById,
     users,
     editUser,
+    deleteUser,
   };
 });

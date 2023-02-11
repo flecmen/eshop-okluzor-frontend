@@ -5,7 +5,7 @@
     @close-modal="revertUserModal"
   ></userModal>
   <div class="q-pa-md">
-    <q-btn label="Nový" color="positive"></q-btn>
+    <q-btn label="Nový" color="positive" @click="showUserModal()"></q-btn>
     <q-table
       title="Zákazníci"
       :loading="table.isLoading"
@@ -50,6 +50,29 @@
       </template>
       <template v-slot:body-cell-edit="props">
         <q-td :props="props" class="justify-center">
+          <q-btn dense flat round color="grey" icon="delete">
+            <q-menu auto-close>
+              <q-card class="my-card">
+                <q-card-section class="bg-primary text-white">
+                  <div class="text">
+                    Určitě TRVALE smazat zákazníka "{{
+                      props.row.nazev_firmy
+                    }}"?
+                  </div>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                  <q-btn
+                    flat
+                    color="white"
+                    class="bg-red"
+                    @click="adminStore.deleteUser(props.row.id)"
+                    >Smazat</q-btn
+                  >
+                </q-card-actions>
+              </q-card>
+            </q-menu>
+          </q-btn>
           <q-btn
             dense
             flat
@@ -91,6 +114,7 @@ import { User } from '../../types/dbTypes';
 import { useUserStore } from 'src/stores/user-store';
 import { useAdminStore } from 'src/stores/admin-store';
 import userModal from '../modals/userModal.vue';
+import blankObjects from 'src/types/blankObjects';
 
 function funkce(props) {
   console.log(props);
@@ -177,8 +201,9 @@ const revertUserModal = () => {
 };
 
 const userModalData = reactive({} as User);
-const showUserModal = (userId: number) => {
-  userModalData.value = adminStore.getUserById(userId);
+const showUserModal = (userId?: number) => {
+  if (userId) userModalData.value = adminStore.getUserById(userId);
+  else userModalData.value = blankObjects.blankUser;
   revertUserModal();
 };
 </script>
