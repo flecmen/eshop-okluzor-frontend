@@ -37,6 +37,7 @@
 import { reactive, onMounted, ref } from 'vue';
 import { User, Address } from '../../types/dbTypes';
 import { useUserStore } from 'src/stores/user-store';
+import useNotify from 'src/composables/useNotify';
 import blankObjects from '../../types/blankObjects';
 import config from 'src/config';
 
@@ -46,6 +47,7 @@ export interface Props {
 }
 
 const userStore = useUserStore();
+const notify = useNotify();
 
 const props = withDefaults(defineProps<Props>(), {
   sendData: false,
@@ -83,8 +85,7 @@ const userForm = ref(null);
 async function exposeFormData() {
   if (await userForm.value.validate()) {
     emit('expose-form-data', formUser);
-    userStore.error = null;
-  } else userStore.error = 'Něco ve formuláři chybí!';
+  } else notify.fail('Něco ve formuláři chybí!');
 }
 
 defineExpose({

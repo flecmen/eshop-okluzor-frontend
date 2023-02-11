@@ -17,6 +17,7 @@ export const useUserStore = defineStore('userStore', () => {
   const afterLoginRoute = ref<string | null>(null);
   const isProcessing = ref<boolean>(false);
 
+
   const isAuthenticated = computed(() => token.value !== null)
 
   async function login(email: User['email'], password: User['password']) {
@@ -66,6 +67,7 @@ export const useUserStore = defineStore('userStore', () => {
   function clearSuccess() {
     success.value = null;
   }
+
 
   return {
     token,

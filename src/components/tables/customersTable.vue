@@ -66,7 +66,7 @@
                     flat
                     color="white"
                     class="bg-red"
-                    @click="adminStore.deleteUser(props.row.id)"
+                    @click="deleteUser(props.row.id)"
                     >Smazat</q-btn
                   >
                 </q-card-actions>
@@ -115,12 +115,11 @@ import { useUserStore } from 'src/stores/user-store';
 import { useAdminStore } from 'src/stores/admin-store';
 import userModal from '../modals/userModal.vue';
 import blankObjects from 'src/types/blankObjects';
+import useNotify from 'src/composables/useNotify';
 
-function funkce(props) {
-  console.log(props);
-}
 const userStore = useUserStore();
 const adminStore = useAdminStore();
+const notify = useNotify();
 const table = reactive({
   columns: [
     // array of Objects
@@ -205,5 +204,10 @@ const showUserModal = (userId?: number) => {
   if (userId) userModalData.value = adminStore.getUserById(userId);
   else userModalData.value = blankObjects.blankUser;
   revertUserModal();
+};
+
+const deleteUser = (userId: number) => {
+  adminStore.deleteUser(userId);
+  notify.success('Uživatel smazán');
 };
 </script>

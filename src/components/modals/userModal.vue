@@ -37,6 +37,8 @@ import { User } from '../../types/dbTypes';
 import userForm from '../forms/userForm.vue';
 import { useUserStore } from 'src/stores/user-store';
 import { useAdminStore } from 'src/stores/admin-store';
+import useNotify from 'src/composables/useNotify';
+
 export interface Props {
   userProp?: User;
   show: boolean;
@@ -48,9 +50,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 const userStore = useUserStore();
 const adminStore = useAdminStore();
+const notify = useNotify();
+
 const emit = defineEmits<{
   (event: 'close-modal'): void;
 }>();
+
 const form = ref<InstanceType<typeof userForm> | null>(null);
 
 const buttonFunction = async () => {
@@ -62,9 +67,10 @@ async function send(user: User) {
   const isOk = await adminStore.editUser(user);
   userStore.isProcessing = false;
   if (isOk) {
+    notify.success('Úspěch');
     emit('close-modal');
   } else {
-    userStore.error = 'chyba při ukládání zákazníka';
+    notify.fail('Něco ne nepovedlo');
   }
 }
 </script>
