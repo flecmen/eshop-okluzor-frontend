@@ -96,7 +96,16 @@
       </template> -->
       <template v-slot:body-cell-branches="props">
         <q-td :props="props">
-          <q-btn dense color="primary" icon="store"></q-btn>
+          <q-btn
+            dense
+            color="primary"
+            icon="store"
+            @click="emit('show-branches', props.row.id)"
+            ><q-badge color="blue" v-if="props.row.branch" floating>{{
+              props.row.branch.length
+            }}</q-badge>
+            <q-badge color="blue" v-else floating>0</q-badge></q-btn
+          >
         </q-td>
       </template>
       <template v-slot:body-cell-orders="props">
@@ -111,13 +120,13 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue';
 import { User } from '../../types/dbTypes';
-import { useUserStore } from 'src/stores/user-store';
+//import { useUserStore } from 'src/stores/user-store';
 import { useAdminStore } from 'src/stores/admin-store';
 import userModal from '../modals/userModal.vue';
 import blankObjects from 'src/types/blankObjects';
 import useNotify from 'src/composables/useNotify';
 
-const userStore = useUserStore();
+//const userStore = useUserStore();
 const adminStore = useAdminStore();
 const notify = useNotify();
 const table = reactive({
@@ -210,4 +219,8 @@ const deleteUser = (userId: number) => {
   adminStore.deleteUser(userId);
   notify.success('Uživatel smazán');
 };
+
+const emit = defineEmits<{
+  (event: 'show-branches', userId: number): void;
+}>();
 </script>

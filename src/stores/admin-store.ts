@@ -1,3 +1,4 @@
+import { User } from './../types/dbTypes';
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
@@ -34,11 +35,15 @@ export const useAdminStore = defineStore('adminStore', () => {
     }
   }
 
-  function getUserById(userId: number): User | undefined {
+  function getUserById(userId: number): User {
     return users.value.find(user => user.id === userId);
   }
 
-  async function editUser(user: User): Promise<boolean> {
+  function getBranchById(userId: number, branchId: number): Branch{
+    return users.value.find(user => user.id === userId).branch.find(branch => branch.id === branchId);
+  }
+
+  async function editOrCreateUser(user: User): Promise<boolean> {
     try {
       //edit usera podle id
       if (user.id !== undefined) {
@@ -58,10 +63,32 @@ export const useAdminStore = defineStore('adminStore', () => {
     }
   }
 
+  async function editOrCreateBranch(userId: number, branch: branch): Promise<boolean> {
+    //existuje user
+    if(!getUserById(userId)) return false
+    //edit branche podle ID
+    if(branch.id !== undefined){
+      const response = await axios.put(config.backendUrl + '/user/' + userId + '/branch/'+branch.id, branch)
+      getBranchById(userId, branch.id).value = response.data;
+      return response.data !== undefined;
+    }
+    //Tvorba nové branche
+    else{
+      const response = await axios.put(config.backendUrl + '/user/' + userId + '/branch', branch)
+      getUserById(userId).branch.push(response.data)
+      return response.data !== undefined;
+    }
+  }
+
   async function deleteUser(userId: number) {
     await axios.delete(config.backendUrl + '/user/' + userId)
     users.value.splice(users.value.findIndex(u => u.id === userId), 1)
     return
+  }
+
+  async function deleteBranch(userId: number, branchId: number){
+    await axios.delete(config.backendUrl + '/user/' + branchId + '/branch/' + branchId)
+    getUserById(userId).branch.splice(branch => branch.id === branchId, 1)
   }
 
   return {
@@ -69,7 +96,10 @@ export const useAdminStore = defineStore('adminStore', () => {
     loadUsers,
     getUserById,
     users,
-    editUser,
+    editOrCreateUser,
     deleteUser,
+    getBranchById,
+    editOrCreateBranch,
+    deleteBranch,
   };
 });

@@ -1,5 +1,8 @@
 <template>
-  <q-form class="fixed-center col-md-3 col-sm-5 col-xs-12" @submit="login()">
+  <q-form
+    class="fixed-center col-xl-1 col-md-2 col-sm-3 col-xs-12"
+    @submit="login()"
+  >
     <q-input
       v-model="email"
       label="email"
@@ -54,8 +57,4 @@ async function login() {
   }
 }
 </script>
-<style>
-.c_login_form {
-  max-width: 400px;
-}
-</style>
+<style></style>

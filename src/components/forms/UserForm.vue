@@ -91,6 +91,4 @@ async function exposeFormData() {
 defineExpose({
   exposeFormData,
 });
-
-//const user = ref(props.userProp);
 </script>
