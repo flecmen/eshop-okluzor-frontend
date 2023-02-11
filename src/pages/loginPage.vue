@@ -1,6 +1,5 @@
 <template>
   <q-form class="fixed-center col-md-3 col-sm-5 col-xs-12" @submit="login()">
-    <errorBanner />
     <q-input
       v-model="email"
       label="email"
@@ -27,7 +26,6 @@
 import { ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
 import { useRouter } from 'vue-router';
-import errorBanner from 'src/components/banners/errorBanner.vue';
 
 import config from 'src/config';
 const userStore = useUserStore();
