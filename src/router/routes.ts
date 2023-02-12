@@ -32,11 +32,6 @@ const routes: RouteRecordRaw[] = [
         beforeEnter: isAdmin,
         children: [
           {
-            name: 'new_user',
-            path: 'new',
-            component: () => import('pages/admin/createCustomer.vue')
-          },
-          {
             name: 'manageCustomers',
             path: 'customers',
             component: () => import('pages/admin/manageCustomers.vue')
