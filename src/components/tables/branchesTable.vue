@@ -61,12 +61,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue';
-import { User } from '../../types/dbTypes';
+import { User } from 'src/types/dbTypes';
 import { useUserStore } from 'src/stores/user-store';
 import { useAdminStore } from 'src/stores/admin-store';
-import branchModal from '../modals/branchModal.vue';
+import branchModal from 'src/components/modals/branchModal.vue';
 import useNotify from 'src/composables/useNotify';
-import { Branch } from '../../types/dbTypes';
+import { Branch } from 'src/types/dbTypes';
 
 export interface Props {
   userId: User['id'];
