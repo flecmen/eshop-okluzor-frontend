@@ -24,7 +24,7 @@ export const useUserStore = defineStore('userStore', () => {
     try {
       isLoggingIn.value = true;
       const data = { email, password }
-      const response = await axios.post(config.backendUrl + '/user/login', data)
+      const response = await axios.post(config.backendUrl + '/auth/login', data)
       console.log(response)
 
 
