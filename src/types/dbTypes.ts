@@ -1,15 +1,23 @@
-export interface Address {
+/**
+ * Model Address
+ *
+ */
+export type Address = {
   id: number
   mesto: string
   ulice: string
-  cislo_popis: string
-  cislo_orient: string
+  cislo_popis: string | null
+  cislo_orient: string | null
   psc: string
-  user: User
-  branch: Branch
+  userId?: number
+  branchId?: number
 }
 
-export interface User {
+/**
+ * Model User
+ *
+ */
+export type User = {
   id: number
   nazev_firmy: string
   password: string
@@ -17,67 +25,80 @@ export interface User {
   dic: string
   tel: string
   email: string
-  branch: Branch
+  addressId: number
   address: Address
-  order: Order[]
+  branch: Branch[]
+  role: Role
 }
 
-export interface Branch {
+/**
+ * Model Branch
+ *
+ */
+export type Branch = {
   id: number
+  userId: number
+  addressId: number
   tel: string
   email: string
   address: Address
-  user: User
-  order: Order[]
 }
 
-export interface Category {
+/**
+ * Model Category
+ *
+ */
+export type Category = {
   id: number
   name: string
   description: string
-  image: ImageData
-  products: Product[]
+  image: Buffer
 }
 
-export interface Product {
+/**
+ * Model Product
+ *
+ */
+export type Product = {
   id: number
-  category: Category
   nazev: string
   vyrobce: string
   popis: string
   cena: number
-  obrazek: ImageData
+  obrazek: Buffer
   dph: number
   typ: Typ
-  //náplasťové
   pocet_kusu_v_baleni: number
   rozmery: string
-  //látkové
   s_obrazkem: boolean
   orientace: Orientace
-  //přísavkové
   barva: Barva
   typ_prisavkove: Typ_prisavkove
-  //oční krytí
   velikost: Velikost
-  //other
-  Order_item: Order_item[]
+  categoryId: number
 }
 
-export interface Order {
+/**
+ * Model Order
+ *
+ */
+export type Order = {
   id: number
-  user: User
-  branch: Branch
+  userId: number
+  branchId: number
   created_at: Date
   status: Order_status
   note: string
-  order_items: Order_item[]
 }
 
-export interface Order_item {
+/**
+ * Model Order_item
+ *
+ */
+export type Order_item = {
   id: number
-  order: Order
-  product: Product
+  orderId: number
+  productId: number
   quantity: number
 }
 
@@ -120,4 +141,8 @@ enum Order_status {
   na_ceste,
   odelsano,
   dokonceno
+}
+enum Role {
+  'Admin',
+  'Customer'
 }
