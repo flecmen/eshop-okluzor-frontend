@@ -27,6 +27,11 @@
     <q-btn flat round dense icon="account_circle">
       <q-menu>
         <q-list>
+          <q-item clickable v-close-popup tabindex="0">
+            <q-item-section>
+              {{ userStore.user.nazev_firmy }}
+            </q-item-section>
+          </q-item>
           <q-item clickable v-close-popup tabindex="0" @click="logout()">
             <q-item-section>
               <q-item-label>Odhlásit se</q-item-label>

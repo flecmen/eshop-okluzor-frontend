@@ -1,7 +1,7 @@
+import { User } from './../types/dbTypes';
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref, computed } from 'vue';
-import { User } from 'src/types/dbTypes';
 import config from '../config'
 
 export const useUserStore = defineStore('userStore', () => {
@@ -10,6 +10,8 @@ export const useUserStore = defineStore('userStore', () => {
   if (token.value) {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
   }
+
+  const user = ref<User>({} as User)
   const error = ref<string | null>(null);
   const success = ref<string | null>(null)
   const isLoggingIn = ref(false);
@@ -25,11 +27,9 @@ export const useUserStore = defineStore('userStore', () => {
       isLoggingIn.value = true;
       const data = { email, password }
       const response = await axios.post(config.backendUrl + '/auth/login', data)
-      console.log(response)
-
-
 
       token.value = response.data.token;
+      user.value = response.data.user;
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + token.value;
       localStorage.setItem('token', token.value as string);
 
@@ -71,6 +71,7 @@ export const useUserStore = defineStore('userStore', () => {
 
   return {
     token,
+    user,
     error,
     isLoggingIn,
     message,

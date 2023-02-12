@@ -28,6 +28,7 @@ export type User = {
   addressId: number
   address: Address
   branch: Branch[]
+  role: Role
 }
 
 /**
@@ -140,4 +141,8 @@ enum Order_status {
   na_ceste,
   odelsano,
   dokonceno
+}
+enum Role {
+  'Admin',
+  'Customer'
 }
