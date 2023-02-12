@@ -1,73 +1,73 @@
 <template>
-  <q-form ref="userForm">
+  <q-form class="col-md-5" ref="userForm" @submit="btnFunction()">
+    <errorBanner />
+    <successBanner />
     <q-input
-      v-model="formUser.nazev_firmy"
+      v-model="user.nazev_firmy"
       label="firma"
       :rules="[rules.required]"
     />
-    <q-input v-model="formUser.ico" label="ičo" :rules="[rules.required]" />
-    <q-input v-model="formUser.dic" label="dič" :rules="[rules.required]" />
-    <q-input v-model="formUser.tel" label="tel" />
+    <q-input v-model="user.ico" label="ičo" :rules="[rules.required]" />
+    <q-input v-model="user.dic" label="dič" :rules="[rules.required]" />
+    <q-input v-model="user.tel" label="tel" />
     <q-input
-      v-model="formUser.email"
+      v-model="user.email"
       label="email"
       :rules="[rules.required, rules.isEmail]"
     />
     <q-input
-      v-model="formUser.address.mesto"
+      v-model="user.address.mesto"
       label="město"
       :rules="[rules.required]"
     />
     <q-input
-      v-model="formUser.address.ulice"
+      v-model="user.address.ulice"
       label="ulice"
       :rules="[rules.required]"
     />
-    <q-input v-model="formUser.address.cislo_popis" label="číslo popisné" />
-    <q-input v-model="formUser.address.cislo_orient" label="číslo orientační" />
-    <q-input
-      v-model="formUser.address.psc"
-      label="psč"
-      :rules="[rules.required]"
-    />
+    <q-input v-model="user.address.cislo_popis" label="číslo popisné" />
+    <q-input v-model="user.address.cislo_orient" label="číslo orientační" />
+    <q-input v-model="user.address.psc" label="psč" :rules="[rules.required]" />
+    <q-btn
+      class="float-right"
+      color="primary"
+      :loading="userStore.isProcessing"
+      label="odeslat"
+      type="submit"
+      ref="button"
+    >
+      <template v-slot:loading> <q-spinner-facebook /> </template>
+    </q-btn>
   </q-form>
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, ref } from 'vue';
-import { User, Address } from '../../types/dbTypes';
-import { useUserStore } from 'src/stores/user-store';
-import useNotify from 'src/composables/useNotify';
+import { reactive, ref } from 'vue';
+import { User } from '../../types/dbTypes';
 import blankObjects from '../../types/blankObjects';
 import config from 'src/config';
+import { useUserStore } from 'src/stores/user-store';
+import { useAdminStore } from 'src/stores/admin-store';
+import errorBanner from '../banners/errorBanner.vue';
+import successBanner from '../banners/successBanner.vue';
 
 export interface Props {
   userProp?: User;
-  sendData?: boolean;
+  type: string;
 }
 
 const userStore = useUserStore();
-const notify = useNotify();
+const adminStore = useAdminStore();
+const props = defineProps<Props>();
+const reset = ref(false);
+const button = ref(null);
 
-const props = withDefaults(defineProps<Props>(), {
-  sendData: false,
-});
-
-let formUser = reactive({} as User);
-formUser.address = reactive({} as Address);
-
-onMounted(() => {
-  if (props.userProp === undefined) {
-    formUser = blankObjects.blankUser;
-  } else {
-    Object.assign(formUser, props.userProp);
-  }
-});
+let user = reactive({} as User);
 
 if (props.userProp === undefined) {
-  formUser = blankObjects.blankUser;
+  user = blankObjects.blankUser;
 } else {
-  Object.assign(formUser, props.userProp);
+  user = reactive(props.userProp);
 }
 
 const rules = {
@@ -76,19 +76,15 @@ const rules = {
     config.regex_email.test(value) || 'Zadejte platný email',
 };
 
-const emit = defineEmits<{
-  (event: 'expose-form-data', user: User): void;
-}>();
+const btnFunction = () => {
+  if (props.type === 'new') adminStore.createUser(user);
+  else if (props.type === 'update') console.log('dodělat');
+  reset.value = true;
+  if (!userStore.error) {
+    user = blankObjects.blankUser;
+    userStore.message = 'Úspěch';
+  }
+};
 
-const userForm = ref(null);
-
-async function exposeFormData() {
-  if (await userForm.value.validate()) {
-    emit('expose-form-data', formUser);
-  } else notify.fail('Něco ve formuláři chybí!');
-}
-
-defineExpose({
-  exposeFormData,
-});
+//const user = ref(props.userProp);
 </script>

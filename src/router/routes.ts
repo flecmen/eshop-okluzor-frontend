@@ -1,4 +1,3 @@
-import { useUserStore } from 'src/stores/user-store';
 import { RouteRecordRaw } from 'vue-router';
 import MainLayout from 'layouts/MainLayout.vue';
 import BlankLayout from 'layouts/BlankLayout.vue'
@@ -29,7 +28,6 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'admin',
         component: MainLayout,
-        beforeEnter: isAdmin,
         children: [
           {
             name: 'new_user',
@@ -52,15 +50,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/ErrorNotFound.vue'),
   },
 ];
-
-function isAdmin(to, from, next) {
-  const userStore = useUserStore();
-  if (userStore.user.role === 'Admin') {
-    next();
-  } else {
-    next({ name: 'home', query: { notAdminRerouted: true } })
-  }
-}
 
 
 

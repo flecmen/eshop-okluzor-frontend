@@ -1,8 +1,6 @@
 <template>
-  <q-form
-    class="fixed-center col-xl-1 col-md-2 col-sm-3 col-xs-12"
-    @submit="login()"
-  >
+  <q-form class="fixed-center col-md-3 col-sm-5 col-xs-12" @submit="login()">
+    <errorBanner />
     <q-input
       v-model="email"
       label="email"
@@ -29,12 +27,11 @@
 import { ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
 import { useRouter } from 'vue-router';
-import config from 'src/config';
-import useNotify from 'src/composables/useNotify';
+import errorBanner from 'src/components/banners/errorBanner.vue';
 
+import config from 'src/config';
 const userStore = useUserStore();
 const router = useRouter();
-const notify = useNotify();
 
 const email = ref('');
 const password = ref('');
@@ -51,10 +48,13 @@ async function login() {
   await userStore.login(email.value, password.value);
 
   if (!userStore.error) {
-    notify.success('Úspěšně přihlášen!');
     router.push(userStore.afterLoginRoute ?? { name: 'home' });
     userStore.setAfterLoginRoute(null);
   }
 }
 </script>
-<style></style>
+<style>
+.c_login_form {
+  max-width: 400px;
+}
+</style>
