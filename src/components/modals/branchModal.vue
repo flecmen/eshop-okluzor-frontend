@@ -33,8 +33,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Branch, User } from '../../types/dbTypes';
-import branchForm from '../forms/branchForm.vue';
+import { Branch, User } from 'src/types/dbTypes';
+import branchForm from 'src/components/forms/branchForm.vue';
 import { useUserStore } from 'src/stores/user-store';
 import { useAdminStore } from 'src/stores/admin-store';
 import useNotify from 'src/composables/useNotify';

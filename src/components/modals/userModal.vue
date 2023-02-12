@@ -33,8 +33,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { User } from '../../types/dbTypes';
-import userForm from '../forms/userForm.vue';
+import { User } from 'src/types/dbTypes';
+import userForm from 'src/components/forms/userForm.vue';
 import { useUserStore } from 'src/stores/user-store';
 import { useAdminStore } from 'src/stores/admin-store';
 import useNotify from 'src/composables/useNotify';

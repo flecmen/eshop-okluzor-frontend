@@ -35,9 +35,9 @@
 
 <script setup lang="ts">
 import { reactive, onMounted, ref } from 'vue';
-import { User, Address } from '../../types/dbTypes';
+import { User, Address } from 'src/types/dbTypes';
 import useNotify from 'src/composables/useNotify';
-import blankObjects from '../../types/blankObjects';
+import blankObjects from 'src/types/blankObjects';
 import config from 'src/config';
 
 export interface Props {

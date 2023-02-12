@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { reactive, onMounted, ref } from 'vue';
-import { User, Address, Branch } from '../../types/dbTypes';
+import { User, Address, Branch } from 'src/types/dbTypes';
 import { useUserStore } from 'src/stores/user-store';
 import useNotify from 'src/composables/useNotify';
 import config from 'src/config';

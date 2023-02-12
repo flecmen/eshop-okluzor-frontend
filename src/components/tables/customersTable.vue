@@ -119,14 +119,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue';
-import { User } from '../../types/dbTypes';
-//import { useUserStore } from 'src/stores/user-store';
+import { User } from 'src/types/dbTypes';
 import { useAdminStore } from 'src/stores/admin-store';
-import userModal from '../modals/userModal.vue';
+import userModal from 'src/components/modals/userModal.vue';
 import blankObjects from 'src/types/blankObjects';
 import useNotify from 'src/composables/useNotify';
 
-//const userStore = useUserStore();
 const adminStore = useAdminStore();
 const notify = useNotify();
 const table = reactive({
