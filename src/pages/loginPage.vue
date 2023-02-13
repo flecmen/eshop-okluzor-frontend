@@ -54,6 +54,8 @@ async function login() {
     notify.success('Úspěšně přihlášen!');
     router.push(userStore.afterLoginRoute ?? { name: 'home' });
     userStore.setAfterLoginRoute(null);
+  } else {
+    notify.fail(userStore.error);
   }
 }
 </script>
