@@ -1,8 +1,7 @@
-import { User } from './../types/dbTypes';
+import { User, Branch } from './../types/dbTypes';
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
-import { User } from 'src/types/dbTypes';
 import config from '../config'
 import { useUserStore } from './user-store';
 const userStore = useUserStore();
@@ -39,7 +38,7 @@ export const useAdminStore = defineStore('adminStore', () => {
     return users.value.find(user => user.id === userId);
   }
 
-  function getBranchById(userId: number, branchId: number): Branch{
+  function getBranchById(userId: number, branchId: number): Branch {
     return users.value.find(user => user.id === userId).branch.find(branch => branch.id === branchId);
   }
 
@@ -63,12 +62,12 @@ export const useAdminStore = defineStore('adminStore', () => {
     }
   }
 
-  async function editOrCreateBranch(userId: number, branch: branch): Promise<boolean> {
+  async function editOrCreateBranch(userId: number, branch: Branch): Promise<boolean> {
     //existuje user
-    if(!getUserById(userId)) return false
+    if (!getUserById(userId)) return false
     //edit branche podle ID
-    if(branch.id !== undefined){
-      const response = await axios.put(config.backendUrl + '/user/' + userId + '/branch/'+branch.id, branch)
+    if (branch.id) {
+      const response = await axios.put(config.backendUrl + '/branch/' + branch.id, branch)
       getBranchById(userId, branch.id).value = response.data;
       return response.data !== undefined;
     }
@@ -86,8 +85,8 @@ export const useAdminStore = defineStore('adminStore', () => {
     return
   }
 
-  async function deleteBranch(userId: number, branchId: number){
-    await axios.delete(config.backendUrl + '/user/' + branchId + '/branch/' + branchId)
+  async function deleteBranch(userId: number, branchId: number) {
+    await axios.delete(config.backendUrl + '/branch/' + branchId)
     getUserById(userId).branch.splice(branch => branch.id === branchId, 1)
   }
 
