@@ -87,4 +87,7 @@ export const useUserStore = defineStore('userStore', () => {
     success,
     clearSuccess,
   };
-});
+},
+  {
+    persist: true
+  });

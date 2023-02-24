@@ -72,7 +72,7 @@ export const useAdminStore = defineStore('adminStore', () => {
       return response.data !== undefined;
     }
     //Tvorba nové branche
-    else{
+    else {
       const response = await axios.put(config.backendUrl + '/user/' + userId + '/branch', branch)
       getUserById(userId).branch.push(response.data)
       return response.data !== undefined;
@@ -101,4 +101,7 @@ export const useAdminStore = defineStore('adminStore', () => {
     editOrCreateBranch,
     deleteBranch,
   };
-});
+},
+  {
+    persist: true
+  });
