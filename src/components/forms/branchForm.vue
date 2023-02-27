@@ -1,20 +1,21 @@
 <template>
   <q-form ref="branchForm">
+    <q-input v-model="formBranch.branch_name" label="branch_name" />
     <q-input v-model="formBranch.tel" label="tel" />
     <q-input
       v-model="formBranch.email"
       label="email"
-      :rules="[rules.isEmail]"
+      :rules="[form_rules.isEmail]"
     />
     <q-input
       v-model="formBranch.address.mesto"
       label="město"
-      :rules="[rules.required]"
+      :rules="[form_rules.required]"
     />
     <q-input
       v-model="formBranch.address.ulice"
       label="ulice"
-      :rules="[rules.required]"
+      :rules="[form_rules.required]"
     />
     <q-input v-model="formBranch.address.cislo_popis" label="číslo popisné" />
     <q-input
@@ -24,64 +25,54 @@
     <q-input
       v-model="formBranch.address.psc"
       label="psč"
-      :rules="[rules.required]"
+      :rules="[form_rules.required]"
     />
   </q-form>
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, ref } from 'vue';
-import { User, Address, Branch } from 'src/types/dbTypes';
-import { useUserStore } from 'src/stores/user-store';
+import { onMounted, ref } from 'vue';
+import { User, Branch } from 'src/types/dbTypes';
 import useNotify from 'src/composables/useNotify';
-import config from 'src/config';
+import form_rules from 'src/utils/form_rules';
 import blankObjects from 'src/types/blankObjects';
+import { useAdminStore } from 'src/stores/admin-store';
 
 export interface Props {
-  branchProp?: Branch;
-  sendData?: boolean;
+  branchId?: Branch['id'];
   userId: User['id'];
 }
 
-const userStore = useUserStore();
 const notify = useNotify();
+const adminStore = useAdminStore();
 
-const props = withDefaults(defineProps<Props>(), {
-  sendData: false,
-});
+const props = defineProps<Props>();
 
-let formBranch = reactive({} as Branch);
-formBranch.address = reactive({} as Address);
+//Vyplnění formBrnach prázdnými údaji
+let formBranch = ref();
+formBranch.value = blankObjects.blankBranch.value;
 
 onMounted(() => {
-  if (props.branchProp === undefined) {
-    formBranch = blankObjects.blankBranch;
-  } else {
-    Object.assign(formBranch, props.branchProp);
+  //Pokud máme branchID, nahradit prázdná pole těmi správnými
+  if (props.branchId) {
+    formBranch.value = JSON.parse(
+      JSON.stringify(
+        adminStore.getBranchById(props.userId, props.branchId) as Branch
+      )
+    );
+    console.log(formBranch);
   }
-  console.log('mounted fromBranch: ' + formBranch.id);
 });
-
-if (props.branchProp === undefined) {
-  formBranch = blankObjects.blankBranch;
-} else {
-  Object.assign(formBranch, props.branchProp);
-}
-const rules = {
-  required: (value: string) => !!value || 'Required',
-  isEmail: (value: string) =>
-    config.regex_email.test(value) || 'Zadejte platný email',
-};
 
 const emit = defineEmits<{
   (event: 'expose-form-data', branch: Branch): void;
 }>();
 
-const branchForm = ref(null);
+const branchForm = ref();
 
 async function exposeFormData() {
   if (await branchForm.value.validate()) {
-    emit('expose-form-data', formBranch);
+    emit('expose-form-data', formBranch.value);
   } else notify.fail('Něco ve formuláři chybí!');
 }
 

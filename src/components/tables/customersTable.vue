@@ -172,7 +172,7 @@ const table = reactive({
       label: 'adresa',
       align: 'left',
       field: (row: User) =>
-        `${row.address.mesto}, ${row.address.ulice} ${row.address.cislo_popis}/${row.address.cislo_orient}, ${row.address.psc}`,
+        `${row.address?.mesto}, ${row.address?.ulice} ${row.address?.cislo_popis}/${row.address?.cislo_orient}, ${row.address?.psc}`,
       sortable: true,
     },
     {

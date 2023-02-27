@@ -1,7 +1,7 @@
 <template>
   <branchModal
     :show="isBranchModalVisible"
-    :branch-prop="branchModalData.value"
+    :branchId="clickedBranchId"
     :userId="props.userId"
     @close-modal="revertBranchModal"
   />
@@ -13,7 +13,14 @@
       :rows="table.rows"
       :columns="table.columns"
       row-key="name"
-      :visible-columns="['edit', 'tel', 'email', 'address', 'orders']"
+      :visible-columns="[
+        'edit',
+        'branch_name',
+        'tel',
+        'email',
+        'address',
+        'orders',
+      ]"
     >
       <template v-slot:body-cell-edit="props">
         <q-td :props="props" class="justify-center">
@@ -62,7 +69,6 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue';
 import { User } from 'src/types/dbTypes';
-import { useUserStore } from 'src/stores/user-store';
 import { useAdminStore } from 'src/stores/admin-store';
 import branchModal from 'src/components/modals/branchModal.vue';
 import useNotify from 'src/composables/useNotify';
@@ -73,11 +79,11 @@ export interface Props {
 }
 const props = defineProps<Props>();
 
-const userStore = useUserStore();
 const adminStore = useAdminStore();
 const notify = useNotify();
 
 const tableTitle = ref('');
+const clickedBranchId = ref<Branch['id']>();
 
 const table = reactive({
   columns: [
@@ -93,6 +99,12 @@ const table = reactive({
       name: 'id',
       field: 'id',
     },
+    {
+      name: 'branch_name',
+      label: 'Pobočka',
+      align: 'left',
+      field: 'branch_name',
+    },
     { name: 'tel', label: 'tel', field: 'tel', align: 'left' },
     { name: 'email', label: 'email', field: 'email', align: 'left' },
     {
@@ -100,7 +112,7 @@ const table = reactive({
       label: 'adresa',
       align: 'left',
       field: (row: User) =>
-        `${row.address.mesto}, ${row.address.ulice} ${row.address.cislo_popis}/${row.address.cislo_orient}, ${row.address.psc}`,
+        `${row.address?.mesto}, ${row.address?.ulice} ${row.address?.cislo_popis}/${row.address?.cislo_orient}, ${row.address?.psc}`,
       sortable: true,
     },
     {
@@ -110,7 +122,7 @@ const table = reactive({
       align: 'left',
     },
   ],
-  rows: [] as Branch[],
+  rows: [] as User['branch'],
   isLoading: true,
   searchOptions: ['Firma', 'email'],
   searchCol: '',
@@ -120,9 +132,9 @@ const table = reactive({
 onMounted(async () => {
   tableTitle.value =
     'Pobočky firmy "' +
-    adminStore.getUserById(props.userId as number).nazev_firmy +
+    adminStore.getUserById(props.userId as number)?.nazev_firmy +
     '"';
-  table.rows = adminStore.getUserById(props.userId as number).branch;
+  table.rows = adminStore.getUserById(props.userId as number)?.branch;
   table.isLoading = false;
 });
 
@@ -131,10 +143,10 @@ const revertBranchModal = () => {
   isBranchModalVisible.value = !isBranchModalVisible.value;
 };
 
-const branchModalData = reactive({} as Branch);
 const showBranchModal = (branchId?: number) => {
   if (branchId) {
-    branchModalData.value = adminStore.getBranchById(props.userId, branchId);
+    if (adminStore.getBranchById(props.userId, branchId))
+      clickedBranchId.value = branchId;
   }
   revertBranchModal();
 };
