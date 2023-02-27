@@ -13,7 +13,14 @@
       :rows="table.rows"
       :columns="table.columns"
       row-key="name"
-      :visible-columns="['edit', 'tel', 'email', 'address', 'orders']"
+      :visible-columns="[
+        'edit',
+        'branch_name',
+        'tel',
+        'email',
+        'address',
+        'orders',
+      ]"
     >
       <template v-slot:body-cell-edit="props">
         <q-td :props="props" class="justify-center">
@@ -91,6 +98,12 @@ const table = reactive({
     {
       name: 'id',
       field: 'id',
+    },
+    {
+      name: 'branch_name',
+      label: 'Pobočka',
+      align: 'left',
+      field: 'branch_name',
     },
     { name: 'tel', label: 'tel', field: 'tel', align: 'left' },
     { name: 'email', label: 'email', field: 'email', align: 'left' },

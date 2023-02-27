@@ -1,5 +1,6 @@
 <template>
   <q-form ref="branchForm">
+    <q-input v-model="formBranch.branch_name" label="branch_name" />
     <q-input v-model="formBranch.tel" label="tel" />
     <q-input
       v-model="formBranch.email"
@@ -36,7 +37,6 @@ import useNotify from 'src/composables/useNotify';
 import form_rules from 'src/utils/form_rules';
 import blankObjects from 'src/types/blankObjects';
 import { useAdminStore } from 'src/stores/admin-store';
-import cloneDeep from 'lodash';
 
 export interface Props {
   branchId?: Branch['id'];
