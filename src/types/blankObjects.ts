@@ -1,8 +1,8 @@
 import { User, Address, Branch } from './dbTypes';
-import { reactive } from 'vue';
+import { ref } from 'vue';
 
 export default {
-  blankUser: reactive({
+  blankUser: ref({
     nazev_firmy: '',
     password: '',
     ico: '',
@@ -16,16 +16,18 @@ export default {
       cislo_orient: '',
       psc: '',
     } as Address,
+    branch: [] as Branch[]
   } as User),
-  blankBranch: reactive({
+  blankBranch: ref({
     tel: '',
     email: '',
+    branch_name: '',
     address: {
       mesto: '',
       ulice: '',
       cislo_popis: '',
       cislo_orient: '',
       psc: '',
-    }as Address
+    } as Address
   } as Branch)
 }

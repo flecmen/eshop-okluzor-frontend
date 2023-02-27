@@ -26,7 +26,7 @@ export type User = {
   tel: string | null
   addressId: number
   role: Role
-  address?: Address
+  address: Address
   branch?: Branch[]
 }
 
@@ -41,7 +41,7 @@ export type Branch = {
   email: string | null
   tel: string | null
   addressId: number
-  address?: Address
+  address: Address
 }
 
 /**

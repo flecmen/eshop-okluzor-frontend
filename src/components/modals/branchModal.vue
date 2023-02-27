@@ -3,7 +3,8 @@
     <q-card class="my-card">
       <q-card-section class="row justify-center">
         <branchForm
-          :branchProp="branchProp"
+          :branchId="branchId"
+          :user-id="userId"
           class="col-11"
           ref="form"
           @expose-form-data="send"
@@ -40,13 +41,13 @@ import { useAdminStore } from 'src/stores/admin-store';
 import useNotify from 'src/composables/useNotify';
 
 export interface Props {
-  branchProp?: Branch;
+  branchId?: Branch['id'];
   userId: User['id'];
   show: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  show: true,
+  show: false,
 });
 
 const userStore = useUserStore();

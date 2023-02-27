@@ -3,32 +3,40 @@
     <q-input
       v-model="formUser.nazev_firmy"
       label="firma"
-      :rules="[rules.required]"
+      :rules="[form_rules.required]"
     />
-    <q-input v-model="formUser.ico" label="ičo" :rules="[rules.required]" />
-    <q-input v-model="formUser.dic" label="dič" :rules="[rules.required]" />
+    <q-input
+      v-model="formUser.ico"
+      label="ičo"
+      :rules="[form_rules.required]"
+    />
+    <q-input
+      v-model="formUser.dic"
+      label="dič"
+      :rules="[form_rules.required]"
+    />
     <q-input v-model="formUser.tel" label="tel" />
     <q-input
       v-model="formUser.email"
       label="email"
-      :rules="[rules.required, rules.isEmail]"
+      :rules="[form_rules.required, form_rules.isEmail]"
     />
     <q-input
       v-model="formUser.address.mesto"
       label="město"
-      :rules="[rules.required]"
+      :rules="[form_rules.required]"
     />
     <q-input
       v-model="formUser.address.ulice"
       label="ulice"
-      :rules="[rules.required]"
+      :rules="[form_rules.required]"
     />
     <q-input v-model="formUser.address.cislo_popis" label="číslo popisné" />
     <q-input v-model="formUser.address.cislo_orient" label="číslo orientační" />
     <q-input
       v-model="formUser.address.psc"
       label="psč"
-      :rules="[rules.required]"
+      :rules="[form_rules.required]"
     />
   </q-form>
 </template>
@@ -38,7 +46,7 @@ import { reactive, onMounted, ref } from 'vue';
 import { User, Address } from 'src/types/dbTypes';
 import useNotify from 'src/composables/useNotify';
 import blankObjects from 'src/types/blankObjects';
-import config from 'src/config';
+import form_rules from 'src/utils/form_rules';
 
 export interface Props {
   userProp?: User;
@@ -67,12 +75,6 @@ if (props.userProp === undefined) {
 } else {
   Object.assign(formUser, props.userProp);
 }
-
-const rules = {
-  required: (value: string) => !!value || 'Required',
-  isEmail: (value: string) =>
-    config.regex_email.test(value) || 'Zadejte platný email',
-};
 
 const emit = defineEmits<{
   (event: 'expose-form-data', user: User): void;

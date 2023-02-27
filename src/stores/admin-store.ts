@@ -34,20 +34,29 @@ export const useAdminStore = defineStore('adminStore', () => {
     }
   }
 
-  function getUserById(userId: number): User {
+  function getUserById(userId: User['id']): User | undefined {
     return users.value.find(user => user.id === userId);
   }
 
-  function getBranchById(userId: number, branchId: number): Branch {
+  function getBranchById(userId: User['id'], branchId: Branch['id']): Branch | undefined {
     return users.value.find(user => user.id === userId).branch.find(branch => branch.id === branchId);
+  }
+
+  function setUserLocally(userId: User['id'], user: User) {
+    users.value[users.value.findIndex(u => u.id === userId)] = user;
+  }
+
+  function setBranchLocally(userId: User['id'], branch: Branch) {
+    users.value.find(user => user.id === userId).branch[users.value.find(user => user.id === userId).branch?.findIndex(b => b.id === branch.id)] = branch
   }
 
   async function editOrCreateUser(user: User): Promise<boolean> {
     try {
       //edit usera podle id
-      if (user.id !== undefined) {
+      if (user.id !== undefined && getUserById(user.id) !== undefined) {
         const response = await axios.put(config.backendUrl + '/user/' + user.id, user)
-        users.value[users.value.findIndex(u => u.id === user.id)] = user
+        if (response)
+          setUserLocally(user.id, user)
         return response.data !== undefined
 
         //Tvorba nového usera
@@ -68,7 +77,8 @@ export const useAdminStore = defineStore('adminStore', () => {
     //edit branche podle ID
     if (branch.id) {
       const response = await axios.put(config.backendUrl + '/branch/' + branch.id, branch)
-      getBranchById(userId, branch.id).value = response.data;
+      if (response.status === 200) setBranchLocally(userId, branch);
+      else console.error('Nepodařilo se odeslat změny')
       return response.data !== undefined;
     }
     //Tvorba nové branche
