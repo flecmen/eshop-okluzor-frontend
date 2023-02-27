@@ -1,4 +1,3 @@
-
 /**
  * Model Address
  *
@@ -10,6 +9,8 @@ export type Address = {
   cislo_popis: string | null
   cislo_orient: string | null
   psc: string
+  userId?: number
+  branchId?: number
 }
 
 /**
@@ -19,15 +20,15 @@ export type Address = {
 export type User = {
   id: number
   nazev_firmy: string
+  password: string
   ico: string
   dic: string
-  password: string
-  email: string | null
-  tel: string | null
+  tel: string
+  email: string
   addressId: number
+  address: Address
+  branch: Branch[]
   role: Role
-  address?: Address
-  branch?: Branch[]
 }
 
 /**
@@ -37,11 +38,11 @@ export type User = {
 export type Branch = {
   id: number
   userId: number
-  branch_name: string | null
-  email: string | null
-  tel: string | null
+  branch_name?: string
   addressId: number
-  address?: Address
+  tel?: string
+  email?: string
+  address: Address
 }
 
 /**
@@ -67,6 +68,7 @@ export type Product = {
   cena: number
   obrazek: Buffer
   dph: number
+  typ: Typ
   pocet_kusu_v_baleni: number
   rozmery: string
   s_obrazkem: boolean
@@ -85,9 +87,9 @@ export type Order = {
   id: number
   userId: number
   branchId: number
-  time_of_creation: Date
+  created_at: Date
   status: Order_status
-  note: string | null
+  note: string
 }
 
 /**
@@ -99,17 +101,15 @@ export type Order_item = {
   orderId: number
   productId: number
   quantity: number
-  priceAtOrder: number
-}
+}\feed\subscriptions
 
-
-export enum Orientace {
+enum Orientace {
   PRAVY,
   LEVY,
   UNI
 }
 
-export enum Barva {
+enum Barva {
   PRIRODNI,
   SVETLE_RUZOVA,
   CERVENA,
@@ -120,30 +120,30 @@ export enum Barva {
   ZLUTA
 }
 
-export enum Typ {
+enum Typ {
   naplastovy,
   latkovy,
   prisavkovy,
   ocni_kryti,
 }
 
-export enum Typ_prisavkove {
+enum Typ_prisavkove {
   A,
   B,
   C
 }
 
-export enum Velikost {
+enum Velikost {
   S,
   L
 }
 
-export enum Order_status {
+enum Order_status {
   na_ceste,
   odelsano,
   dokonceno
 }
-export enum Role {
+enum Role {
   'Admin',
   'Customer'
 }

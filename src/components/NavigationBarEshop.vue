@@ -1,6 +1,5 @@
 <template>
   <q-toolbar>
-    <q-btn flat round dense icon="menu" class="q-mr-sm" />
     <q-item clickable :to="{ name: 'home' }">
       <q-avatar style="width: fit-content" square>
         <img src="src/assets/Logo_eshop.png" />
