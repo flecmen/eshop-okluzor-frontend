@@ -1,4 +1,7 @@
 import { Address } from './types/dbTypes';
+import dotenv from 'dotenv'
+
+dotenv.config();
 
 export default {
   backendUrl: process.env['BackendUrl'],
