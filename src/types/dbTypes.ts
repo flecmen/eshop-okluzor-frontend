@@ -28,6 +28,7 @@ export type User = {
   role: Role
   address: Address
   branch?: Branch[]
+  payment_method: Payment_method
 }
 
 /**
@@ -42,6 +43,7 @@ export type Branch = {
   tel: string | null
   addressId: number
   address: Address
+  plati_postovne: boolean
 }
 
 /**
@@ -147,3 +149,8 @@ export enum Role {
   'Admin',
   'Customer'
 }
+export enum Payment_method {
+  dobirka = 'dobírka',
+  prevodem = 'převodem',
+  hotove = 'hotově'
+};

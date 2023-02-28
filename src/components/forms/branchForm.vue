@@ -1,6 +1,6 @@
 <template>
   <q-form ref="branchForm">
-    <q-input v-model="formBranch.branch_name" label="branch_name" />
+    <q-input v-model="formBranch.branch_name" label="název pobočky" />
     <q-input v-model="formBranch.tel" label="tel" />
     <q-input
       v-model="formBranch.email"
@@ -27,6 +27,7 @@
       label="psč"
       :rules="[form_rules.required]"
     />
+    <q-toggle v-model="formBranch.plati_postovne" label="Platí poštovné" />
   </q-form>
 </template>
 
@@ -60,7 +61,6 @@ onMounted(() => {
         adminStore.getBranchById(props.userId, props.branchId) as Branch
       )
     );
-    console.log(formBranch);
   }
 });
 

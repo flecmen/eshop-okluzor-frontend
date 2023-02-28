@@ -1,7 +1,7 @@
 <template>
   <userModal
     :show="isUserModalVisible"
-    :user-prop="userModalData.value"
+    :userId="clickedUserId"
     @close-modal="revertUserModal"
   ></userModal>
   <div class="q-pa-md">
@@ -22,6 +22,7 @@
         'address',
         'branches',
         'orders',
+        'payment_method',
       ]"
     >
       <template v-slot:top-right>
@@ -50,7 +51,7 @@
       </template>
       <template v-slot:body-cell-edit="props">
         <q-td :props="props" class="justify-center">
-          <q-btn dense flat round color="grey" icon="delete">
+          <q-btn dense flat round color="red-5" icon="delete">
             <q-menu auto-close>
               <q-card class="my-card">
                 <q-card-section class="bg-primary text-white">
@@ -60,7 +61,6 @@
                     }}"?
                   </div>
                 </q-card-section>
-
                 <q-card-actions align="right">
                   <q-btn
                     flat
@@ -83,17 +83,11 @@
           ></q-btn>
         </q-td>
       </template>
-      <!-- <template v-slot:body-cell-address="props">
-        <q-td
-          :props="props"
-          dense
-          color="primary"
-          icon="location_on"
-          @click="funkce(props)"
-        >
-          {{ props.row.address.mesto }}
+      <template v-slot:body-cell-payment_method="props">
+        <q-td :props="props">
+          {{ props.row.payment_method }}
         </q-td>
-      </template> -->
+      </template>
       <template v-slot:body-cell-branches="props">
         <q-td :props="props">
           <q-btn
@@ -122,8 +116,8 @@ import { ref, onMounted, reactive } from 'vue';
 import { User } from 'src/types/dbTypes';
 import { useAdminStore } from 'src/stores/admin-store';
 import userModal from 'src/components/modals/userModal.vue';
-import blankObjects from 'src/types/blankObjects';
 import useNotify from 'src/composables/useNotify';
+import config from '../../config';
 
 const adminStore = useAdminStore();
 const notify = useNotify();
@@ -163,29 +157,34 @@ const table = reactive({
       sortOrder: 'ad', // or 'da'
       headerClasses: 'my-special-class',
     },
-    { name: 'ico', label: 'ičo', field: 'ico', align: 'left' },
-    { name: 'dic', label: 'dič', field: 'dic', align: 'left' },
-    { name: 'tel', label: 'tel', field: 'tel', align: 'left' },
-    { name: 'email', label: 'email', field: 'email', align: 'left' },
+    { name: 'ico', label: 'Ičo', field: 'ico', align: 'left' },
+    { name: 'dic', label: 'Dič', field: 'dic', align: 'left' },
+    { name: 'tel', label: 'Tel', field: 'tel', align: 'left' },
+    { name: 'email', label: 'Email', field: 'email', align: 'left' },
     {
       name: 'address',
-      label: 'adresa',
+      label: 'Adresa',
       align: 'left',
-      field: (row: User) =>
-        `${row.address?.mesto}, ${row.address?.ulice} ${row.address?.cislo_popis}/${row.address?.cislo_orient}, ${row.address?.psc}`,
+      field: (user: User) => config.formatAddress(user.address),
       sortable: true,
     },
     {
-      name: 'branches',
-      label: 'pobočky',
-      field: '',
+      name: 'payment_method',
+      label: 'Platební metoda',
       align: 'left',
+      field: 'payment_method',
+    },
+    {
+      name: 'branches',
+      label: 'Pobočky',
+      field: '',
+      align: 'center',
     },
     {
       name: 'orders',
-      label: 'objednávky',
+      label: 'Objednávky',
       field: '',
-      align: 'left',
+      align: 'center',
     },
   ],
   rows: [] as typeof adminStore.users,
@@ -206,11 +205,12 @@ const revertUserModal = () => {
   isUserModalVisible.value = !isUserModalVisible.value;
 };
 
-const userModalData = reactive({} as User);
+const clickedUserId = ref<User['id']>();
 const showUserModal = (userId?: number) => {
-  if (userId) userModalData.value = adminStore.getUserById(userId);
-  else userModalData.value = blankObjects.blankUser;
-  revertUserModal();
+  if (userId) {
+    clickedUserId.value = userId;
+    revertUserModal();
+  }
 };
 
 const deleteUser = (userId: number) => {

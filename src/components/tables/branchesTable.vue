@@ -19,12 +19,13 @@
         'tel',
         'email',
         'address',
+        'plati_postovne',
         'orders',
       ]"
     >
       <template v-slot:body-cell-edit="props">
         <q-td :props="props" class="justify-center">
-          <q-btn dense flat round color="grey" icon="delete">
+          <q-btn dense flat round color="red-5" icon="delete">
             <q-menu auto-close>
               <q-card class="my-card">
                 <q-card-section class="bg-primary text-white">
@@ -57,6 +58,17 @@
           ></q-btn>
         </q-td>
       </template>
+      <template v-slot:body-cell-plati_postovne="props">
+        <q-td :props="props" class="justify-center">
+          <q-checkbox
+            v-if="props.row.plati_postovne"
+            color="green"
+            disable
+            v-model="props.row.plati_postovne"
+          />
+          <q-checkbox v-else disable v-model="props.row.plati_postovne" />
+        </q-td>
+      </template>
       <template v-slot:body-cell-orders="props">
         <q-td :props="props" class="justify-center">
           <q-btn dense color="primary" icon="list_alt"></q-btn>
@@ -73,6 +85,7 @@ import { useAdminStore } from 'src/stores/admin-store';
 import branchModal from 'src/components/modals/branchModal.vue';
 import useNotify from 'src/composables/useNotify';
 import { Branch } from 'src/types/dbTypes';
+import config from 'src/config';
 
 export interface Props {
   userId: User['id'];
@@ -111,15 +124,20 @@ const table = reactive({
       name: 'address',
       label: 'adresa',
       align: 'left',
-      field: (row: User) =>
-        `${row.address?.mesto}, ${row.address?.ulice} ${row.address?.cislo_popis}/${row.address?.cislo_orient}, ${row.address?.psc}`,
+      field: (row: User) => config.formatAddress(row.address),
       sortable: true,
+    },
+    {
+      name: 'plati_postovne',
+      label: 'Platí poštovné',
+      field: 'plati_postovne',
+      align: 'center',
     },
     {
       name: 'orders',
       label: 'objednávky',
       field: '',
-      align: 'left',
+      align: 'center',
     },
   ],
   rows: [] as User['branch'],

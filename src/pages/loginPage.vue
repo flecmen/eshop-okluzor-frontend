@@ -21,6 +21,7 @@
       color="primary"
       label="přihlásit"
       type="submit"
+      :loading="userStore.isProcessing"
     ></q-btn>
   </q-form>
 </template>
