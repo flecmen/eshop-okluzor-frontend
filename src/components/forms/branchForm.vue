@@ -51,9 +51,11 @@ const props = defineProps<Props>();
 
 //Vyplnění formBrnach prázdnými údaji
 let formBranch = ref();
-formBranch.value = blankObjects.blankBranch.value;
+formBranch.value = JSON.parse(JSON.stringify(blankObjects.blankBranch));
 
 onMounted(() => {
+  //smazání předešlých dat
+  formBranch.value = JSON.parse(JSON.stringify(blankObjects.blankBranch));
   //Pokud máme branchID, nahradit prázdná pole těmi správnými
   if (props.branchId) {
     formBranch.value = JSON.parse(
@@ -73,7 +75,11 @@ const branchForm = ref();
 async function exposeFormData() {
   if (await branchForm.value.validate()) {
     emit('expose-form-data', formBranch.value);
-  } else notify.fail('Něco ve formuláři chybí!');
+  } else {
+    console.log(await branchForm.value.validate());
+    console.log('email: ' + branchForm.value.email);
+    notify.fail('Něco ve formuláři chybí!');
+  }
 }
 
 defineExpose({

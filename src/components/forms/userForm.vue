@@ -56,20 +56,20 @@ import { useAdminStore } from 'src/stores/admin-store';
 
 export interface Props {
   userId?: User['id'];
-  sendData?: boolean;
 }
 
 const notify = useNotify();
 const adminStore = useAdminStore();
 
-const props = withDefaults(defineProps<Props>(), {
-  sendData: false,
-});
+const props = defineProps<Props>();
 
-let formUser = ref();
-formUser.value = blankObjects.blankUser.value;
+let formUser = ref<User>();
+//Aby to neřvalo errory že .nazev_firmy je undefined
+formUser.value = JSON.parse(JSON.stringify(blankObjects.blankUser));
 
 onMounted(() => {
+  //pro smazání předešlých informací
+  formUser.value = JSON.parse(JSON.stringify(blankObjects.blankUser));
   if (props.userId) {
     formUser.value = JSON.parse(
       JSON.stringify(adminStore.getUserById(props.userId))

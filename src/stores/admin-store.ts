@@ -61,6 +61,7 @@ export const useAdminStore = defineStore('adminStore', () => {
 
         //Tvorba nového usera
       } else {
+        if (!user.password) user.password = 'heslo'
         const response = await axios.put(config.backendUrl + '/user', user)
         users.value.push(user)
         return response.data !== undefined

@@ -1,14 +1,14 @@
-import { User, Address, Branch } from './dbTypes';
-import { ref } from 'vue';
+import { User, Address, Branch, Payment_method } from './dbTypes';
 
 export default {
-  blankUser: ref({
+  blankUser: JSON.parse(JSON.stringify({
     nazev_firmy: '',
     password: '',
     ico: '',
     dic: '',
     tel: '',
     email: '',
+    payment_method: Payment_method.prevodem,
     address: {
       mesto: '',
       ulice: '',
@@ -17,11 +17,12 @@ export default {
       psc: '',
     } as Address,
     branch: [] as Branch[]
-  } as User),
-  blankBranch: ref({
+  } as User)),
+  blankBranch: JSON.parse(JSON.stringify({
     tel: '',
     email: '',
     branch_name: '',
+    plati_postovne: true,
     address: {
       mesto: '',
       ulice: '',
@@ -29,5 +30,5 @@ export default {
       cislo_orient: '',
       psc: '',
     } as Address
-  } as Branch)
+  } as Branch))
 }
