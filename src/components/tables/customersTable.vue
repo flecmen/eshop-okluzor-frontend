@@ -1,7 +1,7 @@
 <template>
   <userModal
     :show="isUserModalVisible"
-    :user-prop="userModalData.value"
+    :userId="clickedUserId"
     @close-modal="revertUserModal"
   ></userModal>
   <div class="q-pa-md">
@@ -83,17 +83,6 @@
           ></q-btn>
         </q-td>
       </template>
-      <!-- <template v-slot:body-cell-address="props">
-        <q-td
-          :props="props"
-          dense
-          color="primary"
-          icon="location_on"
-          @click="funkce(props)"
-        >
-          {{ props.row.address.mesto }}
-        </q-td>
-      </template> -->
       <template v-slot:body-cell-branches="props">
         <q-td :props="props">
           <q-btn
@@ -122,8 +111,8 @@ import { ref, onMounted, reactive } from 'vue';
 import { User } from 'src/types/dbTypes';
 import { useAdminStore } from 'src/stores/admin-store';
 import userModal from 'src/components/modals/userModal.vue';
-import blankObjects from 'src/types/blankObjects';
 import useNotify from 'src/composables/useNotify';
+import config from '../../config';
 
 const adminStore = useAdminStore();
 const notify = useNotify();
@@ -171,8 +160,7 @@ const table = reactive({
       name: 'address',
       label: 'adresa',
       align: 'left',
-      field: (row: User) =>
-        `${row.address?.mesto}, ${row.address?.ulice} ${row.address?.cislo_popis}/${row.address?.cislo_orient}, ${row.address?.psc}`,
+      field: (user: User) => config.formatAddress(user.address),
       sortable: true,
     },
     {
@@ -206,11 +194,12 @@ const revertUserModal = () => {
   isUserModalVisible.value = !isUserModalVisible.value;
 };
 
-const userModalData = reactive({} as User);
+const clickedUserId = ref<User['id']>();
 const showUserModal = (userId?: number) => {
-  if (userId) userModalData.value = adminStore.getUserById(userId);
-  else userModalData.value = blankObjects.blankUser;
-  revertUserModal();
+  if (userId) {
+    clickedUserId.value = userId;
+    revertUserModal();
+  }
 };
 
 const deleteUser = (userId: number) => {

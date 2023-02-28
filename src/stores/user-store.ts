@@ -14,7 +14,6 @@ export const useUserStore = defineStore('userStore', () => {
   const user = ref<User>({} as User)
   const error = ref<string | null>(null);
   const success = ref<string | null>(null)
-  const isLoggingIn = ref(false);
   const message = ref<string | null>(null);
   const afterLoginRoute = ref<string | null>(null);
   const isProcessing = ref<boolean>(false);
@@ -24,7 +23,7 @@ export const useUserStore = defineStore('userStore', () => {
 
   async function login(email: User['email'], password: User['password']) {
     try {
-      isLoggingIn.value = true;
+      isProcessing.value = true;
       const data = { email, password }
       const response = await axios.post(config.backendUrl + '/auth/login', data)
 
@@ -35,10 +34,11 @@ export const useUserStore = defineStore('userStore', () => {
 
       error.value = null;
       message.value = null;
-      isLoggingIn.value = false;
+      isProcessing.value = false;
 
     } catch (response) {
       //TODO doladit errorové zprávy podle kódu
+      isProcessing.value = false;
       error.value = 'Nesprávný email, nebo heslo ' + response
     }
   }
@@ -73,7 +73,6 @@ export const useUserStore = defineStore('userStore', () => {
     token,
     user,
     error,
-    isLoggingIn,
     message,
     afterLoginRoute,
     isAuthenticated,

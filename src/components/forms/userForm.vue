@@ -42,49 +42,45 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { User, Address } from 'src/types/dbTypes';
 import useNotify from 'src/composables/useNotify';
 import blankObjects from 'src/types/blankObjects';
 import form_rules from 'src/utils/form_rules';
+import { useAdminStore } from 'src/stores/admin-store';
 
 export interface Props {
-  userProp?: User;
+  userId?: User['id'];
   sendData?: boolean;
 }
 
 const notify = useNotify();
+const adminStore = useAdminStore();
 
 const props = withDefaults(defineProps<Props>(), {
   sendData: false,
 });
 
-let formUser = reactive({} as User);
-formUser.address = reactive({} as Address);
+let formUser = ref();
+formUser.value = blankObjects.blankUser.value;
 
 onMounted(() => {
-  if (props.userProp === undefined) {
-    formUser = blankObjects.blankUser;
-  } else {
-    Object.assign(formUser, props.userProp);
+  if (props.userId) {
+    formUser.value = JSON.parse(
+      JSON.stringify(adminStore.getUserById(props.userId))
+    );
   }
 });
-
-if (props.userProp === undefined) {
-  formUser = blankObjects.blankUser;
-} else {
-  Object.assign(formUser, props.userProp);
-}
 
 const emit = defineEmits<{
   (event: 'expose-form-data', user: User): void;
 }>();
 
-const userForm = ref(null);
+const userForm = ref();
 
 async function exposeFormData() {
   if (await userForm.value.validate()) {
-    emit('expose-form-data', formUser);
+    emit('expose-form-data', formUser.value);
   } else notify.fail('Něco ve formuláři chybí!');
 }
 

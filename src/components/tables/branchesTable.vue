@@ -73,6 +73,7 @@ import { useAdminStore } from 'src/stores/admin-store';
 import branchModal from 'src/components/modals/branchModal.vue';
 import useNotify from 'src/composables/useNotify';
 import { Branch } from 'src/types/dbTypes';
+import config from 'src/config';
 
 export interface Props {
   userId: User['id'];
@@ -111,8 +112,7 @@ const table = reactive({
       name: 'address',
       label: 'adresa',
       align: 'left',
-      field: (row: User) =>
-        `${row.address?.mesto}, ${row.address?.ulice} ${row.address?.cislo_popis}/${row.address?.cislo_orient}, ${row.address?.psc}`,
+      field: (row: User) => config.formatAddress(row.address),
       sortable: true,
     },
     {

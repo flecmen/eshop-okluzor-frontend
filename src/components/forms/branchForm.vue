@@ -60,7 +60,6 @@ onMounted(() => {
         adminStore.getBranchById(props.userId, props.branchId) as Branch
       )
     );
-    console.log(formBranch);
   }
 });
 
