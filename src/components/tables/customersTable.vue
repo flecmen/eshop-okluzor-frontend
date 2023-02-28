@@ -207,10 +207,8 @@ const revertUserModal = () => {
 
 const clickedUserId = ref<User['id']>();
 const showUserModal = (userId?: number) => {
-  if (userId) {
-    clickedUserId.value = userId;
-    revertUserModal();
-  }
+  clickedUserId.value = userId;
+  revertUserModal();
 };
 
 const deleteUser = (userId: number) => {
