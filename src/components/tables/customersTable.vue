@@ -51,7 +51,7 @@
       </template>
       <template v-slot:body-cell-edit="props">
         <q-td :props="props" class="justify-center">
-          <q-btn dense flat round color="grey" icon="delete">
+          <q-btn dense flat round color="red-5" icon="delete">
             <q-menu auto-close>
               <q-card class="my-card">
                 <q-card-section class="bg-primary text-white">
