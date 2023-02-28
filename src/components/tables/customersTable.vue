@@ -22,6 +22,7 @@
         'address',
         'branches',
         'orders',
+        'payment_method',
       ]"
     >
       <template v-slot:top-right>
@@ -60,7 +61,6 @@
                     }}"?
                   </div>
                 </q-card-section>
-
                 <q-card-actions align="right">
                   <q-btn
                     flat
@@ -81,6 +81,11 @@
             icon="edit"
             @click="showUserModal(props.row.id)"
           ></q-btn>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-payment_method="props">
+        <q-td :props="props">
+          {{ props.row.payment_method }}
         </q-td>
       </template>
       <template v-slot:body-cell-branches="props">
@@ -152,28 +157,34 @@ const table = reactive({
       sortOrder: 'ad', // or 'da'
       headerClasses: 'my-special-class',
     },
-    { name: 'ico', label: 'ičo', field: 'ico', align: 'left' },
-    { name: 'dic', label: 'dič', field: 'dic', align: 'left' },
-    { name: 'tel', label: 'tel', field: 'tel', align: 'left' },
-    { name: 'email', label: 'email', field: 'email', align: 'left' },
+    { name: 'ico', label: 'Ičo', field: 'ico', align: 'left' },
+    { name: 'dic', label: 'Dič', field: 'dic', align: 'left' },
+    { name: 'tel', label: 'Tel', field: 'tel', align: 'left' },
+    { name: 'email', label: 'Email', field: 'email', align: 'left' },
     {
       name: 'address',
-      label: 'adresa',
+      label: 'Adresa',
       align: 'left',
       field: (user: User) => config.formatAddress(user.address),
       sortable: true,
     },
     {
-      name: 'branches',
-      label: 'pobočky',
-      field: '',
+      name: 'payment_method',
+      label: 'Platební metoda',
       align: 'left',
+      field: 'payment_method',
+    },
+    {
+      name: 'branches',
+      label: 'Pobočky',
+      field: '',
+      align: 'center',
     },
     {
       name: 'orders',
-      label: 'objednávky',
+      label: 'Objednávky',
       field: '',
-      align: 'left',
+      align: 'center',
     },
   ],
   rows: [] as typeof adminStore.users,

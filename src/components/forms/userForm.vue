@@ -15,6 +15,11 @@
       label="dič"
       :rules="[form_rules.required]"
     />
+    <q-select
+      v-model="formUser.payment_method"
+      :options="Object.keys(Payment_method)"
+      label="Platební metoda"
+    />
     <q-input v-model="formUser.tel" label="tel" />
     <q-input
       v-model="formUser.email"
@@ -43,7 +48,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { User, Address } from 'src/types/dbTypes';
+import { User, Payment_method } from 'src/types/dbTypes';
 import useNotify from 'src/composables/useNotify';
 import blankObjects from 'src/types/blankObjects';
 import form_rules from 'src/utils/form_rules';

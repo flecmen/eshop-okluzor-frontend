@@ -19,6 +19,7 @@
         'tel',
         'email',
         'address',
+        'plati_postovne',
         'orders',
       ]"
     >
@@ -55,6 +56,17 @@
             icon="edit"
             @click="showBranchModal(props.row.id)"
           ></q-btn>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-plati_postovne="props">
+        <q-td :props="props" class="justify-center">
+          <q-checkbox
+            v-if="props.row.plati_postovne"
+            color="green"
+            disable
+            v-model="props.row.plati_postovne"
+          />
+          <q-checkbox v-else disable v-model="props.row.plati_postovne" />
         </q-td>
       </template>
       <template v-slot:body-cell-orders="props">
@@ -116,10 +128,16 @@ const table = reactive({
       sortable: true,
     },
     {
+      name: 'plati_postovne',
+      label: 'Platí poštovné',
+      field: 'plati_postovne',
+      align: 'center',
+    },
+    {
       name: 'orders',
       label: 'objednávky',
       field: '',
-      align: 'left',
+      align: 'center',
     },
   ],
   rows: [] as User['branch'],
