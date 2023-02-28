@@ -1,10 +1,7 @@
 import { Address } from './types/dbTypes';
-import dotenv from 'dotenv'
-
-dotenv.config();
 
 export default {
-  backendUrl: process.env['BackendUrl'],
+  backendUrl: 'https://eshop-okluzor-backend-production.up.railway.app',
   regex_email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   formatAddress: (address: Address) => {
     // use template literals to construct formatted string
