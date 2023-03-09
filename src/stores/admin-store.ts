@@ -55,8 +55,12 @@ export const useAdminStore = defineStore('adminStore', () => {
     return users.value.find(u => u.id === userId);
   }
 
-  function getBranchById(userId: User['id'], branchId: Branch['id']): Branch | undefined {
-    return users.value.find(user => user.id === userId)?.branch?.find(branch => branch.id === branchId);
+  async function getBranchById(branchId: Branch['id']) {
+    const user = users.value.find(u =>
+      u.branch?.find(b => b.id === branchId) !== undefined
+    )
+    console.log(user)
+    return user?.branch?.find(branch => branch.id === branchId);
   }
 
   function getOrderById(orderId: Branch['id']): Order | undefined {

@@ -3,14 +3,14 @@
     <q-select
       v-model="formOrder.branchId"
       :options="branchOptions"
-      label="Pobočka"
+      label="Optika (pobočka)"
       :rules="[form_rules.required]"
       use-input
       emit-value
       map-options
       clearable
       behavior="menu"
-      @update:model-value="selected_user_changed"
+      @update:model-value="selected_branch_changed"
       @filter="filterBranches"
     />
   </q-form>
@@ -62,8 +62,8 @@ onMounted(() => {
   reloadBranches();
 });
 
-function selected_user_changed(val: string) {
-  filterBranches(val, null);
+function selected_branch_changed(val: number) {
+  emit('expose-branchId', val);
   // fill branchOptions based on selected user
 }
 
@@ -73,7 +73,9 @@ function filterBranches(val: string, update) {
     return;
   }
   update(() => {
+    console.log('V updatu');
     const needle = val.toLowerCase();
+    reloadBranches();
     branchOptions.value = branchOptions.value.filter(
       (v) => v?.label.toLowerCase().indexOf(needle) > -1
     );
@@ -92,12 +94,13 @@ onMounted(() => {
 
 const emit = defineEmits<{
   (event: 'expose-form-data', order: Order): void;
+  (event: 'expose-branchId', branchId: number): void;
 }>();
 
-const userForm = ref();
+const orderForm = ref();
 
 async function exposeFormData() {
-  if (await userForm.value.validate()) {
+  if (await orderForm.value.validate()) {
     emit('expose-form-data', formOrder.value);
   } else notify.fail('Něco ve formuláři chybí!');
 }
