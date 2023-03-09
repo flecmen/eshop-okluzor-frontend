@@ -3,9 +3,10 @@
     <q-header elevated>
       <NavigationBarEshop />
     </q-header>
-
-    <q-page-container>
-      <router-view />
+    <q-page-container class="row justify-center">
+      <div class="col-md-10">
+        <router-view />
+      </div>
     </q-page-container>
   </q-layout>
 </template>

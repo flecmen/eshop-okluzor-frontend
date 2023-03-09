@@ -1,4 +1,4 @@
-import { User, Branch } from './../types/dbTypes';
+import { User, Branch, Order } from './../types/dbTypes';
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
@@ -10,17 +10,17 @@ const userStore = useUserStore();
 export const useAdminStore = defineStore('adminStore', () => {
 
   const users = ref<User[]>([] as User[]);
+  const orders = ref<Order[]>([] as Order[])
 
   async function createUser(user: User) {
     try {
       userStore.isProcessing = true;
       const response = await axios.put(config.backendUrl + '/user', user);
-      userStore.isProcessing = false;
       return response.data;
     } catch (err) {
-      userStore.isProcessing = false;
       if (!userStore.error) userStore.error = 'něco se stalo ' + err;
     }
+    userStore.isProcessing = false;
   }
 
   async function loadUsers() {
@@ -28,26 +28,60 @@ export const useAdminStore = defineStore('adminStore', () => {
       userStore.isProcessing = true;
       const response = await axios.get(config.backendUrl + '/user');
       users.value = response.data;
-      userStore.isProcessing = false;
     } catch (err) {
       userStore.error = 'něco se stalo ' + err;
     }
+    userStore.isProcessing = false;
+  }
+
+  async function loadNewOrders() {
+    try {
+      userStore.isProcessing = true;
+      const response = await axios.get(config.backendUrl + '/order/status/objednano')
+      for (const order of response.data) {
+        if (!orders.value.includes(order))
+          orders.value.push(order)
+      }
+    } catch (err) {
+      userStore.error = 'něco se stalo ' + err;
+    }
+    userStore.isProcessing = false;
   }
 
   function getUserById(userId: User['id']): User | undefined {
-    return users.value.find(user => user.id === userId);
+    console.log('getUserById, users: ', users.value)
+    console.log(userId)
+    console.log('getUserById, user: ', users.value.find(u => u.id == userId))
+    return users.value.find(u => u.id === userId);
   }
 
   function getBranchById(userId: User['id'], branchId: Branch['id']): Branch | undefined {
-    return users.value.find(user => user.id === userId).branch.find(branch => branch.id === branchId);
+    return users.value.find(user => user.id === userId)?.branch?.find(branch => branch.id === branchId);
+  }
+
+  function getOrderById(orderId: Branch['id']): Order | undefined {
+    return orders.value?.find(o => o.id === orderId)
   }
 
   function setUserLocally(userId: User['id'], user: User) {
-    users.value[users.value.findIndex(u => u.id === userId)] = user;
+    const userIndex: number = users.value.findIndex(u => u.id === user.id);
+    if (userIndex !== -1) {
+      users.value[userIndex] = user
+    }
   }
 
   function setBranchLocally(userId: User['id'], branch: Branch) {
-    users.value.find(user => user.id === userId).branch[users.value.find(user => user.id === userId).branch?.findIndex(b => b.id === branch.id)] = branch
+    const user = getUserById(userId)
+    if (user) {
+      const branchIndex = user.branch?.findIndex(b => b.id === branch.id) as number;
+      if (branchIndex !== -1 && user.branch) {
+        user.branch[branchIndex] = branch;
+      }
+    }
+  }
+
+  function setOrderLocally(orderId: Order['id'], order: Order) {
+    orders.value[orders.value?.findIndex(o => o.id === orderId)] = order
   }
 
   async function editOrCreateUser(user: User): Promise<boolean> {
@@ -104,11 +138,15 @@ export const useAdminStore = defineStore('adminStore', () => {
   return {
     createUser,
     loadUsers,
+    loadNewOrders,
     getUserById,
     users,
+    orders,
     editOrCreateUser,
     deleteUser,
     getBranchById,
+    getOrderById,
+    setOrderLocally,
     editOrCreateBranch,
     deleteBranch,
   };

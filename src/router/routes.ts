@@ -33,9 +33,14 @@ const routes: RouteRecordRaw[] = [
         children: [
           {
             name: 'manageCustomers',
-            path: 'customers',
+            path: 'zakaznici',
             component: () => import('pages/admin/manageCustomers.vue')
-          }
+          },
+          {
+            name: 'newOrder',
+            path: 'nova_objednavka',
+            component: () => import('pages/admin/newOrder.vue')
+          },
         ],
       },]
   },

@@ -1,3 +1,4 @@
+import { Order_item } from './dbTypes';
 
 /**
  * Model Address
@@ -90,6 +91,7 @@ export type Order = {
   time_of_creation: Date
   status: Order_status
   note: string | null
+  order_itmes: Order_item[]
 }
 
 /**

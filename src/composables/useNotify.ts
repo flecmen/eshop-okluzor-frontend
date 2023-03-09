@@ -1,4 +1,5 @@
 import { useQuasar } from 'quasar';
+
 export default function useNotify() {
   const $q = useQuasar();
   const success = (message: string) => {
