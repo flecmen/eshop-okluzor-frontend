@@ -49,9 +49,6 @@ export const useAdminStore = defineStore('adminStore', () => {
   }
 
   function getUserById(userId: User['id']): User | undefined {
-    console.log('getUserById, users: ', users.value)
-    console.log(userId)
-    console.log('getUserById, user: ', users.value.find(u => u.id == userId))
     return users.value.find(u => u.id === userId);
   }
 
@@ -59,7 +56,6 @@ export const useAdminStore = defineStore('adminStore', () => {
     const user = users.value.find(u =>
       u.branch?.find(b => b.id === branchId) !== undefined
     )
-    console.log(user)
     return user?.branch?.find(branch => branch.id === branchId);
   }
 

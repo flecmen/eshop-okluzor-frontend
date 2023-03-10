@@ -1,4 +1,4 @@
-import { User, Address, Branch, Payment_method, Order_item } from './dbTypes';
+import { User, Address, Branch, Payment_method, Order_item, Order } from './dbTypes';
 
 export default {
   blankUser: JSON.parse(JSON.stringify({
@@ -36,5 +36,5 @@ export default {
     branchId: '',
     note: '',
     order_items: [] as Order_item[],
-  }))
+  })) as Order
 }

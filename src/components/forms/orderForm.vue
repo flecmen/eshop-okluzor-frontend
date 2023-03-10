@@ -73,7 +73,6 @@ function filterBranches(val: string, update) {
     return;
   }
   update(() => {
-    console.log('V updatu');
     const needle = val.toLowerCase();
     reloadBranches();
     branchOptions.value = branchOptions.value.filter(
