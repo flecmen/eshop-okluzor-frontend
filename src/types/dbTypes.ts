@@ -96,6 +96,15 @@ export type Order = {
   order_items: Order_item[]
 }
 
+export type New_order = {
+  userId: number | null
+  branchId: number | null
+  time_of_creation: Date
+  status: Order_status
+  note: string | null
+  order_items: New_order_item[]
+}
+
 /**
  * Model Order_item
  *
@@ -103,6 +112,11 @@ export type Order = {
 export type Order_item = {
   id: number
   orderId: number
+  productId: number
+  quantity: number
+  priceAtOrder: number
+}
+export type New_order_item = {
   productId: number
   quantity: number
   priceAtOrder: number

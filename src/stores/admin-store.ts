@@ -1,16 +1,18 @@
-import { User, Branch, Order } from './../types/dbTypes';
+import { User, Branch, Order, New_order } from './../types/dbTypes';
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
 import config from '../config'
 import { useUserStore } from './user-store';
+import blankObjects from 'src/types/blankObjects';
 const userStore = useUserStore();
 
 
 export const useAdminStore = defineStore('adminStore', () => {
 
   const users = ref<User[]>([] as User[]);
-  const orders = ref<Order[]>([] as Order[])
+  const orders = ref<Order[]>([] as Order[]);
+
 
   async function createUser(user: User) {
     try {
@@ -134,6 +136,8 @@ export const useAdminStore = defineStore('adminStore', () => {
     await axios.delete(config.backendUrl + '/branch/' + branchId)
     getUserById(userId).branch.splice(branch => branch.id === branchId, 1)
   }
+
+
 
   return {
     createUser,
